@@ -9,7 +9,9 @@
         "email": "josh.robertson@coinclear.uk"
       }
     ],
-    "require": {},
+    "require": {
+        "erusev/parsedown": "^1.7"
+    },
     "require-dev": {
         "orchestra/testbench": "^6.1"
     },
