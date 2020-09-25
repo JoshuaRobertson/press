@@ -12,5 +12,15 @@
     "require": {},
     "require-dev": {
         "orchestra/testbench": "^6.1"
+    },
+    "autoload": {
+      "psr-4": {
+        "JoshuaRobertson\\press\\": "src/"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "JoshuaRobertson\\press\\Tests\\": "tests/"
+      }
     }
 }
