@@ -1,0 +1,16 @@
+{
+    "name": "joshrobertson/press",
+    "description": "A markdown powered blog for the Laravel framework.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Josh Robertson",
+        "email": "josh.robertson@coinclear.uk"
+      }
+    ],
+    "require": {},
+    "require-dev": {
+        "orchestra/testbench": "^6.1"
+    }
+}
