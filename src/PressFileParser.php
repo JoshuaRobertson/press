@@ -3,6 +3,8 @@
 namespace JoshuaRobertson\press;
 
 use File;
+use Str;
+use Carbon\Carbon;
 
 class PressFileParser
 {
@@ -16,6 +18,8 @@ class PressFileParser
     $this->splitFile();
 
     $this->explodeData();
+
+    $this->processFields();
   }
 
   public function getData()
@@ -26,7 +30,7 @@ class PressFileParser
   protected function splitFile()
   {
     preg_match('/^\-{3}(.*?)\-{3}(.*)/s',
-      File::get($this->filename),
+      File::exists($this->filename) ? File::get($this->filename) : $this->filename,
       $this->data
     );
   }
@@ -40,5 +44,20 @@ class PressFileParser
     }
 
     $this->data['body'] = trim($this->data[2]);
+  }
+
+  protected function processFields()
+  {
+    foreach ($this->data as $field => $value) {
+
+      $class = 'JoshuaRobertson\\press\\Fields\\' . Str::title($field);
+
+      if (class_exists($class) && method_exists($class, 'process')) {
+        $this->data = array_merge(
+          $this->data,
+          $class::process($field, $value)
+        );
+      }
+    }
   }
 }
