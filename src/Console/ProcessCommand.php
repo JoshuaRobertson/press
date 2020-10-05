@@ -3,9 +3,9 @@
 namespace JoshuaRobertson\press\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use JoshuaRobertson\press\PressFileParser;
+use JoshuaRobertson\press\Press;
 use JoshuaRobertson\press\Post;
 
 class ProcessCommand extends Command
@@ -16,26 +16,23 @@ class ProcessCommand extends Command
 
   public function handle()
   {
-    if (is_null(config('press'))) {
+    if (Press::configNotPublished()) {
       return $this->warn('Please publish the config file by running ' .
       '\'php artisan vendor:publish --tag=press-config\'');
     }
 
     // Fetch all posts
-    $files = File::files(config('press.path'));
-
-    // Process each file
-    foreach ($files as $file) {
-      $post = (new PressFileParser($file->getPathname()))->getData();
-    }
+    $posts = Press::driver()->fetchPosts();
 
     // Persist to the DB
-    Post::create([
-      'identifier' => Str::random(),
-      'slug' => Str::slug($post['title']),
-      'title' => $post['title'],
-      'body' => $post['body'],
-      'extra' => $post['extra'] ?? '',
-    ]);
+    foreach ($posts as $post) {
+      Post::create([
+        'identifier' => Str::random(),
+        'slug' => Str::slug($post['title']),
+        'title' => $post['title'],
+        'body' => $post['body'],
+        'extra' => $post['extra'] ?? '',
+      ]);
+    }
   }
 }
