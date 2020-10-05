@@ -21,18 +21,22 @@ class ProcessCommand extends Command
       '\'php artisan vendor:publish --tag=press-config\'');
     }
 
-    // Fetch all posts
-    $posts = Press::driver()->fetchPosts();
+    try {
+      // Fetch all posts
+      $posts = Press::driver()->fetchPosts();
 
-    // Persist to the DB
-    foreach ($posts as $post) {
-      Post::create([
-        'identifier' => Str::random(),
-        'slug' => Str::slug($post['title']),
-        'title' => $post['title'],
-        'body' => $post['body'],
-        'extra' => $post['extra'] ?? '',
-      ]);
+      // Persist to the DB
+      foreach ($posts as $post) {
+        Post::create([
+          'identifier' => $post['identifier'],
+          'slug' => Str::slug($post['title']),
+          'title' => $post['title'],
+          'body' => $post['body'],
+          'extra' => $post['extra'] ?? '',
+        ]);
+      }
+    } catch (\Exception $e) {
+      $this->error($e->getMessage());
     }
   }
 }

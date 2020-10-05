@@ -3,18 +3,28 @@
 namespace JoshuaRobertson\press\Drivers;
 
 use Illuminate\Support\Facades\File;
-use JoshuaRobertson\press\PressFileParser;
+use JoshuaRobertson\press\Exceptions\FileDriverDirectoryNotFound;
 
-class FileDriver
+class FileDriver extends Driver
 {
   public function fetchPosts()
   {
-    $files = File::files(config('press.path'));
+    $files = File::files($this->config['path']);
 
     foreach ($files as $file) {
-      $posts[] = (new PressFileParser($file->getPathname()))->getData();
+      $this->parse($file->getPathname(), $file->getFilename());
     }
 
-    return $posts ?? [];
+    return $this->posts;
+  }
+
+  protected function validateSource()
+  {
+    if (!File::exists($this->config['path'])) {
+      throw new FileDriverDirectoryNotFound(
+        'Directory at \'' . $this->config['path'] . '\' does not exist. ' .
+        'Check the directory path in the config file.'
+      );
+    }
   }
 }
