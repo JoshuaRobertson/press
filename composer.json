@@ -26,5 +26,12 @@
       "psr-4": {
         "JoshuaRobertson\\press\\Tests\\": "tests/"
       }
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "JoshuaRobertson\\press\\PressBaseServiceProvider"
+        ]
+      }
     }
 }
