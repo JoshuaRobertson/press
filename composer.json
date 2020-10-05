@@ -1,8 +1,9 @@
 {
-    "name": "joshrobertson/press",
+    "name": "joshuarobertson/press",
     "description": "A markdown powered blog for the Laravel framework.",
     "type": "library",
     "license": "MIT",
+    "version": "0.1.0",
     "authors": [
       {
         "name": "Josh Robertson",
