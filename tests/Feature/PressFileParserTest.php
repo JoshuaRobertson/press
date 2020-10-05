@@ -1,9 +1,8 @@
 <?php
 
-namespace JoshuaRobertson\press;
+namespace JoshuaRobertson\press\Tests;
 
 use Carbon\Carbon;
-use Orchestra\Testbench\TestCase;
 use JoshuaRobertson\press\PressFileParser;
 
 class PressFileParserTest extends TestCase

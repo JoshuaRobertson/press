@@ -2,7 +2,6 @@
 
 namespace JoshuaRobertson\press\Tests;
 
-use Orchestra\Testbench\TestCase;
 use JoshuaRobertson\press\MarkdownParser;
 
 class MarkdownTest extends TestCase
