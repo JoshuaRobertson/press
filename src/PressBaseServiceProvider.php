@@ -3,6 +3,8 @@
 namespace JoshuaRobertson\press;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use JoshuaRobertson\press\Press;
 
 class PressBaseServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,9 @@ class PressBaseServiceProvider extends ServiceProvider
   private function registerResources()
   {
     $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+    $this->loadViewsFrom(__DIR__.'/../resources/views', 'press');
+
+    $this->registerRoutes();
   }
 
   protected function registerPublishing()
@@ -32,5 +37,20 @@ class PressBaseServiceProvider extends ServiceProvider
     $this->publishes([
       __DIR__.'/../config/press.php' => config_path('press.php'),
     ], 'press-config');
+  }
+
+  protected function registerRoutes()
+  {
+    Route::group($this->routeConfiguration(), function () {
+      $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+    });
+  }
+
+  private function routeConfiguration()
+  {
+    return [
+      'prefix' => Press::path(),
+      'namespace' => 'JoshuaRobertson\press\Http\Controllers',
+    ];
   }
 }

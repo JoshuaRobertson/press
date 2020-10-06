@@ -3,7 +3,7 @@
 namespace JoshuaRobertson\press;
 
 use File;
-use Str;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class PressFileParser
