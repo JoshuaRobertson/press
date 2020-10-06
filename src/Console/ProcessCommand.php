@@ -3,9 +3,8 @@
 namespace JoshuaRobertson\press\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use JoshuaRobertson\press\Facades\Press;
-use JoshuaRobertson\press\Post;
+use JoshuaRobertson\press\Repositories\PostRepository;
 
 class ProcessCommand extends Command
 {
@@ -13,7 +12,7 @@ class ProcessCommand extends Command
 
   protected $description = 'Update blog posts';
 
-  public function handle()
+  public function handle(PostRepository $postRepository)
   {
     if (Press::configNotPublished()) {
       return $this->warn('Please publish the config file by running ' .
@@ -24,15 +23,13 @@ class ProcessCommand extends Command
       // Fetch all posts
       $posts = Press::driver()->fetchPosts();
 
+      $this->info('Number of posts: ' . count($posts));
+
       // Persist to the DB
       foreach ($posts as $post) {
-        Post::create([
-          'identifier' => $post['identifier'],
-          'slug' => Str::slug($post['title']),
-          'title' => $post['title'],
-          'body' => $post['body'],
-          'extra' => $post['extra'] ?? '',
-        ]);
+        $postRepository->save($post);
+
+        $this->info('Post: ' . $post['title']);
       }
     } catch (\Exception $e) {
       $this->error($e->getMessage());
