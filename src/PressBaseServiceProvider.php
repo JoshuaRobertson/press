@@ -4,7 +4,7 @@ namespace JoshuaRobertson\press;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use JoshuaRobertson\press\Press;
+use JoshuaRobertson\press\Facades\Press;
 
 class PressBaseServiceProvider extends ServiceProvider
 {
@@ -29,6 +29,7 @@ class PressBaseServiceProvider extends ServiceProvider
     $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     $this->loadViewsFrom(__DIR__.'/../resources/views', 'press');
 
+    $this->registerFacades();
     $this->registerRoutes();
   }
 
@@ -52,5 +53,12 @@ class PressBaseServiceProvider extends ServiceProvider
       'prefix' => Press::path(),
       'namespace' => 'JoshuaRobertson\press\Http\Controllers',
     ];
+  }
+
+  protected function registerFacades()
+  {
+    $this->app->singleton('Press', function ($app) {
+      return new \JoshuaRobertson\press\Press();
+    });
   }
 }

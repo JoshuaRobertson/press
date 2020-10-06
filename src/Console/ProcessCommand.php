@@ -4,8 +4,7 @@ namespace JoshuaRobertson\press\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use JoshuaRobertson\press\PressFileParser;
-use JoshuaRobertson\press\Press;
+use JoshuaRobertson\press\Facades\Press;
 use JoshuaRobertson\press\Post;
 
 class ProcessCommand extends Command
