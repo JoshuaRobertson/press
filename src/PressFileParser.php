@@ -3,6 +3,7 @@
 namespace JoshuaRobertson\press;
 
 use File;
+use ReflectionClass;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -55,8 +56,7 @@ class PressFileParser
   protected function processFields()
   {
     foreach ($this->data as $field => $value) {
-
-      $class = 'JoshuaRobertson\\press\\Fields\\' . Str::title($field);
+      $class = $this->getField(Str::title($field));
 
       if (!class_exists($class) && !method_exists($class, 'process')) {
         $class = 'JoshuaRobertson\\press\\Fields\\Extra';
@@ -66,6 +66,17 @@ class PressFileParser
         $this->data,
         $class::process($field, $value, $this->data)
       );
+    }
+  }
+
+  private function getField($field)
+  {
+    foreach (\JoshuaRobertson\press\Facades\Press::availableFields() as $availableField) {
+      $class = new ReflectionClass($availableField);
+
+      if ($class->getShortName() == $field) {
+        return $class->getName();
+      }
     }
   }
 }
